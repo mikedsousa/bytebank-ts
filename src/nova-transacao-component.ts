@@ -1,23 +1,31 @@
-const elementoFormulario = document.querySelector('.block-nova-transacao form') as HTMLFormElement;
+const elementoFormulario = document.querySelector(
+  '.block-nova-transacao form'
+) as HTMLFormElement;
 elementoFormulario.addEventListener('submit', function (e) {
   e.preventDefault();
   if (!elementoFormulario.checkValidity()) {
     alert('Por favor, preencha todos os campos da transação!');
     return;
   }
-  const inputTipoTransacao = elementoFormulario.querySelector('#tipoTransacao') as HTMLSelectElement;
-  const inputValor = elementoFormulario.querySelector('#valor') as HTMLInputElement;
-  const inputData = elementoFormulario.querySelector('#data') as HTMLInputElement;
+  const inputTipoTransacao = elementoFormulario.querySelector(
+    '#tipoTransacao'
+  ) as HTMLSelectElement;
+  const inputValor = elementoFormulario.querySelector(
+    '#valor'
+  ) as HTMLInputElement;
+  const inputData = elementoFormulario.querySelector(
+    '#data'
+  ) as HTMLInputElement;
 
-  let tipoTransacao: string = inputTipoTransacao.value;
+  let tipoTransacao: TipoTransacao = inputTipoTransacao.value as TipoTransacao;
   let valor: number = inputValor.valueAsNumber;
   let data: Date = new Date(inputData.value);
 
-  if (tipoTransacao == 'Depósito') {
+  if (tipoTransacao == TipoTransacao.DEPOSITO) {
     saldo += valor;
   } else if (
-    tipoTransacao == 'Transferência' ||
-    tipoTransacao == 'Pagamento de Boleto'
+    tipoTransacao == TipoTransacao.TRANFERENCIA ||
+    tipoTransacao == TipoTransacao.PAGAMENTO_BOLETO
   ) {
     saldo -= valor;
   } else {
@@ -25,9 +33,8 @@ elementoFormulario.addEventListener('submit', function (e) {
     return;
   }
 
-  elementoSaldo.textContent = saldo.toString();
-
-  const novaTransacao = {
+  elementoSaldo.textContent = formatarMoeda(saldo)
+  const novaTransacao: Transacao = {
     tipoTransacao: tipoTransacao,
     valor: valor,
     data: data,
